@@ -59,7 +59,7 @@ public class FitPeoAutomationAsses {
 					.keyUp(Keys.CONTROL).sendKeys(Keys.BACK_SPACE).keyDown(Keys.CONTROL).sendKeys("a")
 					.keyUp(Keys.CONTROL).sendKeys(Keys.BACK_SPACE).keyDown(Keys.CONTROL).sendKeys("a") // Select all
 					.keyUp(Keys.CONTROL).sendKeys(Keys.BACK_SPACE).sendKeys(expectedTextFieldValue).perform();
-			Thread.sleep(2000);
+			Thread.sleep(3000);
 
             String actualTextFieldValue = sliderValueField.getAttribute("value");
             if (expectedTextFieldValue.equals(actualTextFieldValue)) {
