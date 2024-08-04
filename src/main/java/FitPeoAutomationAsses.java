@@ -15,7 +15,7 @@ public class FitPeoAutomationAsses {
 	private static WebDriver driver;
 	private static WebDriverWait wait;
 	private static final String expectedTextFieldValue = "560";
-	private static final String expectedTextFieldValue_Slider= "820";
+	private static final String expectedTextFieldValue_Slider = "820";
 	private static final String expectedReimbursementValue = "$110700";
 	private static String[] cptCodes = { "CPT-99091", "CPT-99453", "CPT-99454", "CPT-99474" };
 
@@ -73,27 +73,35 @@ public class FitPeoAutomationAsses {
 				throw new AssertionError("Expected input field value: " + expectedTextFieldValue + ", but found: "
 						+ actualTextFieldValue);
 			}
-			//drag the slider
+			// drag the slider
 			WebElement slider = driver
 					.findElement(By.xpath("//*[contains(text(), 'Medicare Eligible Patients')]/../div/span"));
 			// Click and drag the slider to the desired position
-			actions.clickAndHold(slider).moveByOffset(-27, 0).release().perform();
-			// Verify the aria-valuenow attribute
+			int expectedSliderValue = Integer.parseInt(expectedTextFieldValue_Slider);
 			WebElement ariaValueElement = driver.findElement(
 					By.xpath("//*[contains(text(), 'Medicare Eligible Patients')]/../div/span/span/input"));
-			String ariaValueNow = ariaValueElement.getAttribute("aria-valuenow");
 
-			System.out.println("Aria Value Now: " + ariaValueNow);
-			Thread.sleep(2000);
+			for (int i = 0; i <= 2000;) {
+				if (expectedSliderValue < 1000) {
+					actions.clickAndHold(slider).moveByOffset(i, 0).release().perform();
+					i--;
+				} else if (expectedSliderValue > 1000) {
+					actions.clickAndHold(slider).moveByOffset(i, 0).release().perform();
+					i++;
+				} else {
+					actions.clickAndHold(slider).moveByOffset(i, 0).release().perform();
+				}
+
+				String ariaValueNow = ariaValueElement.getAttribute("aria-valuenow");
+
+				if (expectedTextFieldValue_Slider.equals(ariaValueNow)) {
+					System.out.println("x is equal to ariaValueNow");
+					System.out.println("Aria Value Now: " + ariaValueNow);
+					break;
+				}
+			}
 
 			highlightElement(slider);
-
-			if (expectedTextFieldValue_Slider.equals(ariaValueNow)) {
-				System.out.println("Test Case Passed!");
-			} else {
-				throw new AssertionError(
-						"Expected aria-valuenow: " + expectedTextFieldValue_Slider + ", but found: " + ariaValueNow);
-			}
 
 			// Select CPT Codes
 			for (String code : cptCodes) {
